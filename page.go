@@ -33,13 +33,13 @@ func add_to_file(path string, strings []string, topic string) {
 
 	for i := 0; i < len(strings); i++ {
 		data := strings[i]+"\n"
-		if i == 1 {
-			data = "<border> "+data
+		if i == 0 {
+			data = "\n <border>" + data
 		}
 		f.WriteString(data)
 	}
 	_topic := "topic:"+topic+"\n <border>"
 	date   := time.Now()
-	f.WriteString(date.String() + "\n")
+	f.WriteString("date"+date.String() + "\n")
 	f.WriteString(_topic)
 }
