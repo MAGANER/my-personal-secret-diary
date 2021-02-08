@@ -1,11 +1,11 @@
 package main
 
 import(
-	"strings"
 	"io/ioutil"
 	"fmt"
 	"os"
 	"time"
+	"strings"
 )
 
 type Page struct {
@@ -14,14 +14,44 @@ type Page struct {
 	Data  string
 }
 
-func get_file_data(path string) []string {
-	file, err := ioutil.ReadFile(path)
+func is_file_ok(path string, err error) {
 	if err != nil {
 		fmt.Println("something went wrong with file ",path, err)
 		os.Exit(-1)
 	} 
-	lines := strings.Split(string(file),"\n")
+}
+func get_diary_password(path,key string) string {
+	file, err := ioutil.ReadFile(path)
+	is_file_ok(path,err)
+	
+
+	_file:= string(file)
+
+	begin := strings.Index(_file,"[")
+	end   := strings.Index(_file,"]")
+
+	if begin == -1 || end == -1 {
+		return "";
+	}
+
+	_key := []byte(key)
+	password := _file[begin+1:end]
+	password, _ = decrypt(_key,password)
+	return  password
+
+}
+func get_file_data(path, password string) string {
+	file, err := ioutil.ReadFile(path)
+	is_file_ok(path,err)
+	key   := []byte(password)
+	lines := string(file)
+	lines, _  = decrypt(key,lines) 
 	return lines
+}
+func read_file_lines(path string) []string {
+	file, err := ioutil.ReadFile(path)
+	is_file_ok(path,err)
+	return strings.Split(string(file),"\n")
 }
 func add_to_file(path string, strings []string, topic, password string) {
 
