@@ -20,7 +20,7 @@ func is_file_ok(path string, err error) {
 		os.Exit(-1)
 	} 
 }
-func get_diary_password(path,key string) string {
+func get_diary_password(path,key string) (string, int) {
 	file, err := ioutil.ReadFile(path)
 	is_file_ok(path,err)
 	
@@ -31,21 +31,19 @@ func get_diary_password(path,key string) string {
 	end   := strings.Index(_file,"]")
 
 	if begin == -1 || end == -1 {
-		return "";
+		return "", -1;
 	}
 
 	_key := []byte(key)
 	password := _file[begin+1:end]
 	password, _ = decrypt(_key,password)
-	return  password
+	return  password, end
 
 }
-func get_file_data(path, password string) string {
+func get_file_data(path string) string {
 	file, err := ioutil.ReadFile(path)
 	is_file_ok(path,err)
-	key   := []byte(password)
 	lines := string(file)
-	lines, _  = decrypt(key,lines) 
 	return lines
 }
 func read_file_lines(path string) []string {
@@ -61,20 +59,16 @@ func add_to_file(path string, strings []string, topic, password string) {
 	}
 
 	key := []byte(password)
+	united_str := ""
 	for i := 0; i < len(strings); i++ {
-		data := strings[i]+"\n"
-		if i == 0 {
-			data = "\n <border>" + data
-		}
-		data, err = encrypt(key,data)
-		if err != nil {
-			fmt.Println("something went wrong!")
-		}
-		f.WriteString(data)
+		united_str += strings[i] + "\n"
 	}
-	_topic, _ := encrypt(key,"topic:"+topic+"\n <border>")
 	curr_time := time.Now().String()
-	date,   _ := encrypt(key,"date:"+curr_time+"\n")
-	f.WriteString(date)
-	f.WriteString(_topic)
+	data := united_str+"topic:"+topic+"\n"+"date:"+curr_time+"\n"
+	fmt.Println(data)
+	data, err = encrypt(key,data)
+	if err != nil {
+		fmt.Println("can not encrypt data!")
+	}
+	f.WriteString(data)
 }
