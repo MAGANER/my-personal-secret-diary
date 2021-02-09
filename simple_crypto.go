@@ -92,21 +92,3 @@ func decrypt(key []byte, text string) (string, error) {
 
 	return string(unpadMsg), nil
 }
-
-//specific functions for my tasks
-func encrypt_strings(lines []string, password string) []string {
-	key := []byte(password)
-	var encrypted_lines = make([]string, len(lines))
-	for i := 0; i < len(lines); i++ {
-		encrypted_lines[i], _ = encrypt(key, lines[i])
-	}
-	return encrypted_lines
-}
-func decrypt_strings(lines []string, password string) []string {
-	key := []byte(password)
-	var decrypted_lines = make([]string, len(lines))
-	for i := 0; i < len(lines); i++ {
-		decrypted_lines[i], _ = decrypt(key, lines[i])
-	}
-	return decrypted_lines
-}
