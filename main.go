@@ -4,9 +4,8 @@ import "fmt"
 import "io/ioutil"
 import "os"
 import "time"
-
-
-func run() {
+import "strings"
+func run(pages *[]string) {
 	//TODO: generate key
 	var key = "LKHlhb899Y09olUi"
 	
@@ -21,7 +20,7 @@ func run() {
 			if end+2 == len(data) {
 				fmt.Println("diary is empty!")
 				time.Sleep(2*time.Second)
-				run()
+				run(pages)
 			} else {
 				data = data[end+2:]
 			}
@@ -29,12 +28,15 @@ func run() {
 			if err != nil {
 				fmt.Println("something went wrong with decryption!")
 			} else {
-				fmt.Println(encrypted)
+				split_result := strings.Split(encrypted,"<border>")
+				split_result = split_result[:len(split_result)-1]
+				pages = &split_result
+				run(pages)
 			}
 		} else {
 			fmt.Println("password is incorrect!", password)
 			time.Sleep(2*time.Second)
-			run()
+			run(pages)
 		}
 
 	case result == 1:
@@ -46,7 +48,7 @@ func run() {
 		if real_password != clear_str(password) {
 			fmt.Println("password is incorrect!", password)
 			time.Sleep(2*time.Second)
-			run()
+			run(pages)
 		}
 
 		new_strings := read_file_lines(new_page)
@@ -61,11 +63,25 @@ func run() {
 			fmt.Println("can not create new diary!", err)
 			os.Exit(-1)
 		}
+	case result == 3:
+		if len(*pages) == 0 {
+			fmt.Println("no pages to print!Maybe diary is not open yet?")
+			run(pages)
+		}
+		for i := 0; i< len(*pages); i++ {
+			fmt.Println("--------------")
+			fmt.Println((*pages)[0])
+		}
+		run(pages)
+	case result == 4:
+		_pages := make([]string,0)
+		run(&_pages)
 	}
 }
 func main() {
 	execute_cmd_command("title My Secret Personal Diary")
 	execute_cmd_command("cls")
 
-	run()
+	var pages []string
+	run(&pages)
 }

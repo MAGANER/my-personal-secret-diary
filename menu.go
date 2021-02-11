@@ -16,6 +16,8 @@ func print_help() {
 	fmt.Println("open == open existing diary")
 	fmt.Println("add  == add new page to existing diary")
 	fmt.Println("make == make new diary")
+	fmt.Println("read == read all diary")
+	fmt.Println("quit == close diary")
 }
 func get_data(file, question string) (string, string) {
 	reader := bufio.NewReader(os.Stdin)
@@ -60,6 +62,12 @@ func run_menu() int {
 		}
 		if val == "make" {
 			return 2
+		}
+		if val == "read" {
+			return 3
+		}
+		if val == "quit" {
+			return 4
 		}
 
 		execute_cmd_command("cls")

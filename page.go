@@ -59,7 +59,7 @@ func add_to_file(path string, strings []string, topic, password string) {
 	}
 
 	key := []byte(password)
-	united_str := "<border>\n"
+	united_str := ""
 	for i := 0; i < len(strings); i++ {
 		united_str += strings[i] + "\n"
 	}
