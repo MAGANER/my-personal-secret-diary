@@ -68,9 +68,10 @@ func run(pages *[]string) {
 			fmt.Println("no pages to print!Maybe diary is not open yet?")
 			run(pages)
 		}
+		fmt.Println(len(*pages))
 		for i := 0; i< len(*pages); i++ {
 			fmt.Println("--------------")
-			fmt.Println((*pages)[0])
+			fmt.Println((*pages)[i])
 		}
 		run(pages)
 	case result == 4:
