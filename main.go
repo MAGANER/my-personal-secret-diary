@@ -17,7 +17,14 @@ func run() {
 		path, password := get_data("enter diary path:","enter password:")
 		real_password, end  := get_diary_password(path,key)
 		if password ==  real_password {
-			data := get_file_data(path)[end+2:]
+			data := get_file_data(path)
+			if end+2 == len(data) {
+				fmt.Println("diary is empty!")
+				time.Sleep(2*time.Second)
+				run()
+			} else {
+				data = data[end+2:]
+			}
 			encrypted, err := decrypt([]byte(key), data)
 			if err != nil {
 				fmt.Println("something went wrong with decryption!")
