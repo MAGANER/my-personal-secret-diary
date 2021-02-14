@@ -52,7 +52,7 @@ func run(pages *[]string, _key string) {
 
 		new_strings := read_file_lines(new_page)
 		add_to_file(diary, new_strings,topic,key)
-		execute_cmd_command("erase "+new_page)
+		os.Remove(new_page)
 		run(pages,key)
 		
 	case result == 2:
