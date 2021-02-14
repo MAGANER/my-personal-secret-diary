@@ -5,9 +5,8 @@ import "io/ioutil"
 import "os"
 import "time"
 import "strings"
-func run(pages *[]string) {
-	//TODO: generate key
-	var key = "LKHlhb899Y09olUi"
+func run(pages *[]string, _key string) {
+	var key = _key
 	
 	result := run_menu()
 	switch {
@@ -20,7 +19,7 @@ func run(pages *[]string) {
 			if end+2 == len(data) {
 				fmt.Println("diary is empty!")
 				time.Sleep(2*time.Second)
-				run(pages)
+				run(pages,key)
 			} else {
 				data = data[end+2:]
 			}
@@ -31,12 +30,12 @@ func run(pages *[]string) {
 				split_result := strings.Split(encrypted,"<border>")
 				split_result = split_result[:len(split_result)-1]
 				pages = &split_result
-				run(pages)
+				run(pages,key)
 			}
 		} else {
 			fmt.Println("password is incorrect!", password)
 			time.Sleep(2*time.Second)
-			run(pages)
+			run(pages,key)
 		}
 
 	case result == 1:
@@ -48,12 +47,13 @@ func run(pages *[]string) {
 		if real_password != clear_str(password) {
 			fmt.Println("password is incorrect!", password)
 			time.Sleep(2*time.Second)
-			run(pages)
+			run(pages,key)
 		}
 
 		new_strings := read_file_lines(new_page)
 		add_to_file(diary, new_strings,topic,key)
 		execute_cmd_command("erase "+new_page)
+		run(pages,key)
 		
 	case result == 2:
 		name, password := get_data("enter new diary name:","enter password for save data:")
@@ -64,26 +64,28 @@ func run(pages *[]string) {
 			fmt.Println("can not create new diary!", err)
 			os.Exit(-1)
 		}
+		run(pages,key)
 	case result == 3:
 		if len(*pages) == 0 {
 			fmt.Println("no pages to print!Maybe diary is not open yet?")
-			run(pages)
+			run(pages,key)
 		}
 		fmt.Println(len(*pages))
 		for i := 0; i< len(*pages); i++ {
 			fmt.Println("--------------")
 			fmt.Println((*pages)[i])
 		}
-		run(pages)
+		run(pages,key)
 	case result == 4:
 		_pages := make([]string,0)
-		run(&_pages)
+		run(&_pages,key)
 	}
 }
 func main() {
 	execute_cmd_command("title My Secret Personal Diary")
 	execute_cmd_command("cls")
 
+	var key = get_key()
 	var pages []string
-	run(&pages)
+	run(&pages,key)
 }

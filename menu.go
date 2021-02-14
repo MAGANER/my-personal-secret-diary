@@ -29,6 +29,14 @@ func get_data(file, question string) (string, string) {
 
 	return clear_str(path),clear_str(second)
 }
+func get_key() string {
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Print("enter AES encryption key:")
+	key, _ := reader.ReadString('\n')
+
+	return clear_str(key)
+}
 func get_data_to_add(file, question, topic, page_path string) (string, string, string, string) {
 	reader := bufio.NewReader(os.Stdin)
 
