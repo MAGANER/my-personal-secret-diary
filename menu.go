@@ -17,7 +17,6 @@ func print_help() {
 	fmt.Println("add  == add new page to existing diary")
 	fmt.Println("make == make new diary")
 	fmt.Println("read == read all diary")
-	fmt.Println("quit == close diary")
 }
 func get_data(file, question string) (string, string) {
 	reader := bufio.NewReader(os.Stdin)
