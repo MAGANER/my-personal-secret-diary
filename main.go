@@ -53,6 +53,7 @@ func run(pages *[]string) {
 
 		new_strings := read_file_lines(new_page)
 		add_to_file(diary, new_strings,topic,key)
+		execute_cmd_command("erase "+new_page)
 		
 	case result == 2:
 		name, password := get_data("enter new diary name:","enter password for save data:")
