@@ -5,9 +5,8 @@ import "io/ioutil"
 import "os"
 import "time"
 import "strings"
-func run(pages *[]string, _key string) {
-	var key = _key
-	
+func run(pages *[]string, key string) {
+
 	result := run_menu()
 	switch {
 	case result == 0:
@@ -23,15 +22,24 @@ func run(pages *[]string, _key string) {
 			} else {
 				data = data[end+2:]
 			}
-			encrypted, err := decrypt([]byte(key), data)
-			if err != nil {
-				fmt.Println("something went wrong with decryption!")
-			} else {
-				split_result := strings.Split(encrypted,"<border>")
-				split_result = split_result[:len(split_result)-1]
-				pages = &split_result
-				run(pages,key)
+			_pages := strings.Split(data, "<bor>")
+
+			decrypted := ""
+			for i := 0; i < len(_pages); i++ {
+				if len(_pages[i]) > 0 {
+					page, err := decrypt([]byte(key),_pages[i])
+					if err != nil {
+						fmt.Println("something went wrong with decryption!",err)
+					} else {
+						decrypted += string(page)
+					}
+				}
 			}
+			split_result := strings.Split(decrypted,"<border>")
+			split_result = split_result[:len(split_result)-1]
+			pages = &split_result
+			run(pages,key)
+			
 		} else {
 			fmt.Println("password is incorrect!", password)
 			time.Sleep(2*time.Second)
@@ -86,6 +94,7 @@ func main() {
 	execute_cmd_command("cls")
 
 	var key = get_key()
+
 	var pages []string
 	run(&pages,key)
 }

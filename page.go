@@ -66,6 +66,7 @@ func add_to_file(path string, strings []string, topic, password string) {
 	curr_time := time.Now().String()
 	data := united_str+"topic:"+topic+"\n"+"date:"+curr_time+"\n"+"<border>"+"\n"
 	data, err = encrypt(key,data)
+	data += "<bor>"
 	if err != nil {
 		fmt.Println("can not encrypt data!")
 	}
